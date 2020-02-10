@@ -1,0 +1,5 @@
+{
+    "jslint.enable": false,
+    "tslint.ignoreDefinitionFiles": true,
+    "typescript.validate.enable": false
+}
