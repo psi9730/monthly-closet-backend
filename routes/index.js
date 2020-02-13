@@ -15,6 +15,6 @@ const router = express.Router();
 
 // Only admin have permission to access for the below APIs
 // router.use(authController.restrictTo('admin'));
-router.use('/customer', customer);
+router.use('/customers', customer);
 
 module.exports = router;
