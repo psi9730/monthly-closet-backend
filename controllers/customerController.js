@@ -12,9 +12,11 @@ exports.getAllUser = async (req, res, next) => {
     delete req.query.offset;
   }
   if (Object.keys(req.query).length > 0) {
-    query = query.where(req.query);
+    Object.keys(req.query).forEach((property) => {
+      if (req.query[property]) query = query.where(property, 'like', `%${req.query[property]}%`);
+    });
   }
-  query.select()
+  query.select('id', 'name', 'phone AS phoneNumber')
     .then(
       (rows) => res.json(response(200, rows)),
     )
