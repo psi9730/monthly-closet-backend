@@ -26,7 +26,7 @@ exports.getAllUser = async (req, res, next) => {
 };
 exports.postUser = async (req, res, next) => {
   connection('customer')
-    .where(req.query)
+    .insert(req.body)
     .then(
       (rows) => res.json(response(200, rows)),
     )
