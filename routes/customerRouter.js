@@ -1,19 +1,19 @@
 const express = require('express');
+const multer = require('multer');
 
 const router = express.Router();
 const userController = require('../controllers/customerController');
 const SchemaValidator = require('../utils/schemaValidator');
 
 const validateRequest = SchemaValidator(true);
-const loader = require('../utils/fileUpload');
+const upload = require('../utils/fileUpload');
 const { MAX_FILE_NUM } = require('../config/constants');
 
-router.post('/', loader.array('files', MAX_FILE_NUM), userController.postUser);
 router
   .route('/')
   .all(validateRequest)
   .get(userController.getAllUser)
-  // .post(loader.array('files', MAX_FILE_NUM), userController.postUser);
+  .post(upload.fields([{ name: 'files', maxCount: MAX_FILE_NUM }]), userController.postUser);
 
 router
   .route('/:id')

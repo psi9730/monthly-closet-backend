@@ -25,12 +25,15 @@ exports.getAllUser = async (req, res, next) => {
   }));
 };
 exports.postUser = async (req, res, next) => {
-  connection('customer')
-    .insert(req.body)
-    .then(
-      (rows) => res.json(response(200, rows)),
-    )
-    .catch((err) => { next(err); });
+  console.log('req.files', req.files);
+  res.json(response(200, {}, ''));
+  // console.log("HELLO");
+  // connection('customer')
+  //   .insert(req.body)
+  //   .then(
+  //     (rows) => res.json(response(200, rows)),
+  //   )
+  //   .catch((err) => { next(err); });
 };
 exports.getUser = async (req, res, next) => {
   connection('customer')
