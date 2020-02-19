@@ -25,7 +25,10 @@ app.use('*', (req, res, next) => {
   const err = new AppError(NOTFOUND, 'fail', 'undefined route');
   next(err, req, res, next);
 });
-
+app.use((err, req, res, next) => {
+  console.log('This is the invalid field ->', err.field);
+  next(err);
+});
 app.use(globalErrHandler);
 
 app.listen(app.get('port'), () => {

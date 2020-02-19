@@ -25,13 +25,52 @@ exports.getAllUser = async (req, res, next) => {
   }));
 };
 exports.postUser = async (req, res, next) => {
-  connection('customer')
-    .insert(req.body)
-    .then(
-      (rows) => res.json(response(200, rows)),
-    )
+  console.log('req.files', req.files);
+  const customerKey = ['name', 'phone', 'cafe24_id', 'age'];
+  const customerImageKey = ['files', 'user_id', 'file_url', 'file_name'];
+  const customerParam = {};
+  const customerImageParams = [];
+  customerKey.forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(req.params, key)) customerParam[key] = req.params.key;
+  });
+  customerImageKey.forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(req.files, key)) {
+      req.files.files.forEach((file) => {
+        const customerImageParam = {};
+        customerImageParam.file_url = file.path;
+        customerImageParam.file_name = file.filename;
+        customerImageParams.push(customerImageParam);
+      });
+    }
+  });
+
+  let customerId;
+  return connection.transaction((t) => connection('customer')
+    .transacting(t)
+    .insert(customerParam)
+    .then((customerRes) => {
+      [customerId] = customerRes;
+      connection('customer_image')
+        .insert(
+          customerImageParams.map((param) => {
+            console.log('params', param);
+            return ({
+              user_id: customerId,
+              file_url: param.file_url,
+              file_name: param.file_name,
+            });
+          }),
+        )
+        .catch((err) => next(err));
+    })
+    .then(t.commit)
+    .catch(t.rollback))
+    .then(() => {
+      res.json(response(200, {}, `customer Id: ${customerId}`));
+    })
     .catch((err) => { next(err); });
 };
+
 exports.getUser = async (req, res, next) => {
   connection('customer')
     .where(req.query)
