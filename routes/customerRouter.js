@@ -5,12 +5,15 @@ const userController = require('../controllers/customerController');
 const SchemaValidator = require('../utils/schemaValidator');
 
 const validateRequest = SchemaValidator(true);
+const loader = require('../utils/fileUpload');
+const { MAX_FILE_NUM } = require('../config/constants');
 
+router.post('/', loader.array('files', MAX_FILE_NUM), userController.postUser);
 router
   .route('/')
   .all(validateRequest)
   .get(userController.getAllUser)
-  .post(userController.postUser);
+  // .post(loader.array('files', MAX_FILE_NUM), userController.postUser);
 
 router
   .route('/:id')
