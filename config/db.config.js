@@ -2,7 +2,7 @@
 module.exports = {
   HOST: 'localhost',
   USER: 'root',
-  PASSWORD: 'tmddlf12!Q',
+  PASSWORD: 'dnjfzmfrkwmdk',
   PORT: 3306,
-  DB: 'clovary',
+  DB: 'monthly-closet',
 };

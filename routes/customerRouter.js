@@ -10,16 +10,16 @@ const upload = require('../utils/fileUpload');
 const { MAX_FILE_NUM } = require('../config/constants');
 
 router
-  .route('/')
-  .all(validateRequest)
-  .get(userController.getAllUser)
-  .post(upload.fields([{ name: 'files', maxCount: MAX_FILE_NUM }]), userController.postUser);
-
-router
   .route('/:id')
   .all(validateRequest)
   .get(userController.getUser)
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
+
+router
+  .route('/')
+  .all(validateRequest)
+  .get(userController.getAllUser)
+  .post(upload.fields([{ name: 'files', maxCount: MAX_FILE_NUM }]), userController.postUser);
 
 module.exports = router;

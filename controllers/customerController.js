@@ -52,7 +52,7 @@ exports.postUser = async (req, res, next) => {
       connection('customer_image')
         .insert(
           customerImageParams.map((param) => ({
-            customer_id: customerId,
+            user_id: customerId,
             file_url: param.file_url,
             file_name: param.file_name,
           })),
@@ -68,8 +68,12 @@ exports.postUser = async (req, res, next) => {
 };
 
 exports.getUser = async (req, res, next) => {
+  const query = {
+    'customer.id': req.params.id,
+  };
   connection('customer')
-    .where(req.query)
+    .innerJoin('customer_image', 'customer_image.customer_id', '=', 'customer.id')
+    .where(query)
     .then(
       (rows) => res.json(response(200, rows)),
     )
