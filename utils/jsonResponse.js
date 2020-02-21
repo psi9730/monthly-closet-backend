@@ -1,7 +1,13 @@
 function getStandardResponse(status, data, message = '') {
+  if (data) {
+    return {
+      status,
+      data,
+      message,
+    };
+  }
   return {
     status,
-    data,
     message,
   };
 }

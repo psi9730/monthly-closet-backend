@@ -3,7 +3,6 @@ const moment = require('moment');
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    console.log(__dirname.concat('/../uploads'));
     cb(null, __dirname.concat('/../uploads')); // 파일이 저장되는 경로입니다.
   },
   filename(req, file, cb) {

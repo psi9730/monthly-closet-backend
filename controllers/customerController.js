@@ -18,20 +18,19 @@ exports.getAllUser = async (req, res, next) => {
     query = query.offset(req.query.offset);
     delete req.query.offset;
   }
-  const customers = await query.select('id', 'name', 'phone AS phoneNumber').catch((err) => { next(err); });
+  const customers = await query.select('id', 'name', 'phone AS phoneNumber', 'cafe24_id AS cafe24Id').catch((err) => { next(err); });
   res.json(response(200, {
     customers,
     totalCustomerNum: totalCustomerNum[0]['count(*)'],
   }));
 };
 exports.postUser = async (req, res, next) => {
-  console.log('req.files', req.files);
-  const customerKey = ['name', 'phone', 'cafe24_id', 'age'];
-  const customerImageKey = ['files', 'user_id', 'file_url', 'file_name'];
+  const customerKey = ['name', 'phone', 'cafe24_id', 'birth_date'];
+  const customerImageKey = ['files', 'customer_id', 'file_url', 'file_name'];
   const customerParam = {};
   const customerImageParams = [];
   customerKey.forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(req.params, key)) customerParam[key] = req.params.key;
+    if (Object.prototype.hasOwnProperty.call(req.body, key)) customerParam[key] = req.body[key];
   });
   customerImageKey.forEach((key) => {
     if (Object.prototype.hasOwnProperty.call(req.files, key)) {
@@ -52,14 +51,11 @@ exports.postUser = async (req, res, next) => {
       [customerId] = customerRes;
       connection('customer_image')
         .insert(
-          customerImageParams.map((param) => {
-            console.log('params', param);
-            return ({
-              user_id: customerId,
-              file_url: param.file_url,
-              file_name: param.file_name,
-            });
-          }),
+          customerImageParams.map((param) => ({
+            customer_id: customerId,
+            file_url: param.file_url,
+            file_name: param.file_name,
+          })),
         )
         .catch((err) => next(err));
     })
